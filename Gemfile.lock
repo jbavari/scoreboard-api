@@ -13,6 +13,8 @@ GEM
       rack (>= 1.0)
     rake (10.4.2)
     sequel (4.29.0)
+    shotgun (0.9.1)
+      rack (>= 1.0)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -37,6 +39,7 @@ DEPENDENCIES
   pg (= 0.18.2)
   rake
   sequel (= 4.29.0)
+  shotgun
   sinatra (= 1.4.6)
   sinatra-contrib (= 1.4.6)
   thin

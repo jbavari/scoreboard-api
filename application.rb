@@ -1,5 +1,4 @@
 require "bundler"
-require 'sequel'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/namespace'
@@ -28,30 +27,42 @@ module ScoreboardApi
 
     use Rack::Deflater
 
-    get '/hi' do
-      json :hi => 'there'
-    end
-
     namespace '/api/v1' do
-      get '/hi' do
-        json :hi => 'again'
-      end
-     
       get '/scores' do
-        json :scoreboard => ScoreboardApi::Scoreboard.all
+        json :scoreboard => Scoreboard.all
       end
 
       get '/teams' do
-        json :teams => ScoreboardApi::Team.to_json
+        json :teams => Team.all
       end
 
       post '/results' do
-        data = JSON.parse(request.body.read)
-        puts "We got data #{data}"
-        # $DB[:scoreboard].insert(
-        #   :home_team => data[:home_team], 
-        #   :visitor_team => data[:visitor_team]
-        # )
+        home_team = params[:home_team]
+        visitor_team = params[:visitor_team]
+        home_score = params[:home_score]
+        visitor_score = params[:visitor_score]
+        
+        home_team_id = Team.insert_if_not_exists(home_team)
+        visitor_team_id = Team.insert_if_not_exists(visitor_team)
+
+        puts "Home_team_id #{home_team_id}"
+        puts "visitor_team_id #{visitor_team_id}"
+
+        status = true
+
+        begin
+          scoreboard = Scoreboard.insert(
+            date: DateTime.now,
+            :home_id => home_team_id, 
+            :home_score => home_score,
+            :visitor_id => visitor_team_id, 
+            :visitor_score => visitor_score
+          )
+        rescue
+          status = false
+        end
+
+        json payload: {status: status, scoreboard_id: scoreboard}
       end
     end
   end

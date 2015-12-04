@@ -1,5 +1,5 @@
-require 'sequel/model'
-DB = Sequel.connect('postgres://localhost/scoreboard')
+require_relative "./db"
+
 module ScoreboardApi
   class Scoreboard < Sequel::Model(:scoreboard)
     one_to_many :team
