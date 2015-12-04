@@ -1,6 +1,6 @@
-require_relative './db'
+require_relative "./db"
 
-# DB = Sequel.connect('postgres://localhost/scoreboard')
+# DB = Sequel.connect("postgres://localhost/scoreboard")
 module ScoreboardApi
   class Team < Sequel::Model(:team)
     # Built-in format support when loading the plugin
@@ -10,15 +10,14 @@ module ScoreboardApi
 
     def self.insert_if_not_exists(name)
       puts "Looking up -> #{name}"
-      dataset = self.where(name: name)
+      dataset = where(:name => name)
       if dataset.first.nil?
-        rec_id = self.insert(name: name)
+        rec_id = insert(:name => name)
       else
         rec_id = dataset.first.id
       end
 
       rec_id
     end
-    
   end
 end
